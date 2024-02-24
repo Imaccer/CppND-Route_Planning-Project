@@ -54,7 +54,13 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Return the pointer.
 
 RouteModel::Node *RoutePlanner::NextNode() {
-
+    std::sort(open_list.begin(), open_list.end(),
+              [](const RouteModel::Node* first, const RouteModel::Node* second) {
+                  return (first->g_value + first->h_value) < (second->g_value + second->h_value);
+              });
+    RouteModel::Node *lowest_f = open_list.back();
+    open_list.pop_back();
+    return lowest_f;
 }
 
 
