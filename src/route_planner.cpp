@@ -100,10 +100,23 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
 void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
-
+    // Check for null pointers
+    if (!start_node || !end_node) {
+        std::cerr << "Error: Start or end node is null." << std::endl;
+        return;  // Or handle the error appropriately
+    }
     // TODO: Implement your solution here.
-    //  Initialize the
-//    AddNeighbors(current_node);
-//    current_node = NextNode();
+    //  Initialize the node
+    current_node = start_node;
+    open_list.emplace_back(start_node);
+
+    while (open_list.size()>0) {
+     AddNeighbors(current_node);
+     if (current_node->x == end_node->x && current_node->y == end_node->y) {
+      m_Model.path = ConstructFinalPath(current_node);
+      break;
+     }     
+     current_node = NextNode();
+    }
 
 }
