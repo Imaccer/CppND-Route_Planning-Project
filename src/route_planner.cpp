@@ -56,7 +56,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 RouteModel::Node *RoutePlanner::NextNode() {
     std::sort(open_list.begin(), open_list.end(),
               [](const RouteModel::Node* first, const RouteModel::Node* second) {
-                  return (first->g_value + first->h_value) < (second->g_value + second->h_value);
+                  return (first->g_value + first->h_value) > (second->g_value + second->h_value);
               });
     RouteModel::Node *lowest_f = open_list.back();
     open_list.pop_back();
@@ -100,6 +100,7 @@ std::vector<RouteModel::Node> RoutePlanner::ConstructFinalPath(RouteModel::Node 
 
 void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
+//    start_node->visited = true;
     // Check for null pointers
     if (!start_node || !end_node) {
         std::cerr << "Error: Start or end node is null." << std::endl;
@@ -108,13 +109,13 @@ void RoutePlanner::AStarSearch() {
     // TODO: Implement your solution here.
     //  Initialize the node
     current_node = start_node;
-    open_list.emplace_back(start_node);
+    open_list.emplace_back(current_node);
 
     while (open_list.size()>0) {
      AddNeighbors(current_node);
      if (current_node->x == end_node->x && current_node->y == end_node->y) {
       m_Model.path = ConstructFinalPath(current_node);
-      break;
+      return;
      }     
      current_node = NextNode();
     }
